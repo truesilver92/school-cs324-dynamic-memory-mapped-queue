@@ -1,5 +1,6 @@
 
 #include <sys/time.h>
+#include <iostream>
 
 /* Return the current time in seconds, using a double precision number.       */
 
@@ -15,9 +16,20 @@ double When()
 
 }
 
-class queue {
+class ArrayQueue {
 public:
+
+  ArrayQueue(){
+    
+  }
+
+  // add item
   void enqueue(int item) {
+    
+  }
+
+  // remove item
+  int dequeue() {
     
   }
 };
