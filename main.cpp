@@ -19,10 +19,10 @@ double When()
 class ArrayQueue {
 public:
 
-  ulong max_size = 4096;
+  int max_size = 40960;
   int *array;
-  ulong head;
-  ulong tail;
+  int head;
+  int tail;
   
 
   ArrayQueue(){
@@ -30,23 +30,55 @@ public:
     array = new int[max_size];
     
     // set the head and tail to the begining
-    head = (ulong)array;
-    tail = (ulong)array;
+    head = 0;
+    tail = 0;
   }
 
   // add item
   void enqueue(int item) {
-    *(int*)tail = item;
+    array[tail] = item;
     // move the tail forward and wrap around if at end
     tail = (tail + 1) % max_size;
   }
 
   // remove item
   int dequeue() {
-    int item = *(int*)head;
+    int item = array[head];
     // clear it
-    *(int*)head = 0;
+    array[head] = 0;
     head = (head + 1) % max_size;
+    return item;
+  }
+};
+
+class Node {
+public:
+  Node *next;
+  int content;
+};
+
+class LinkedQueue : public ArrayQueue {
+
+public:
+
+  Node *head;
+  Node *tail;
+
+  LinkedQueue(int item){
+    *head = Node();
+    tail = head;
+    head->content = item;
+  }
+
+  void enqueue(int item){
+    *(tail->next) = Node();
+    tail->content = item;
+    tail = tail->next;
+  }
+
+  int dequeue(){
+    int item = head->content;
+    head = head->next;
     return item;
   }
 };
@@ -60,21 +92,29 @@ void arrayqueue_test(ArrayQueue &aq, int number_to_do){
   }
 }
 
+void arrayqueue_test_multiplyer(ArrayQueue &aq, int number_to_do, int how_many_times){
+  double total;
+  for(int i = 0; i < how_many_times; i++){
+    double time = When();
+    arrayqueue_test(aq, number_to_do);
+    double time2 = When();
+    total = total + (time2 - time);
+  }
+
+  std::cout << "ArrayQueue test ";
+  std::cout << number_to_do;
+  std::cout << " enqueue then dequeue time average over ";
+  std::cout << how_many_times;
+  std::cout << ":\n";
+  std::cout << total / how_many_times;
+  std::cout << "\n";
+}
+
 int main(){
   // run and test array implementation
   // create array version
   ArrayQueue aq = ArrayQueue();
-  double time = When();
-  arrayqueue_test(aq, 100);
-  double time2 = When();
-  std::cout << "ArrayQueue test 100 time:\n";
-  std::cout << time2 - time;
-
-  time = When();
-  arrayqueue_test(aq, 1000);
-  time2 = When();
-  std::cout << "ArrayQueue test 1000 time:\n";
-  std::cout << time2 - time;
+  arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test linked list version
 
