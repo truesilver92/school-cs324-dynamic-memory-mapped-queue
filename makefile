@@ -1,5 +1,5 @@
 C = g++
-FLAGS = -g -D_DEBUG -Wall
+FLAGS = -g -D_DEBUG -Wall -lrt
 LFLAGS = $(FLAGS) -o
 CFLAGS = $(FLAGS) -c
 
