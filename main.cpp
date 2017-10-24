@@ -94,6 +94,8 @@ public:
   int segment;
   int *buffer;
   int size = 40960;
+  int head = 0;
+  int tail = 0;
   
   MMQueue(){
     segment = shm_open("segment", O_RDWR|O_CREAT, 0600);
@@ -101,6 +103,17 @@ public:
     buffer = (int *)mmap(0, 2 * size, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
     mmap(buffer, size, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FIXED, segment, 0);
     mmap(buffer + size, size, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FIXED, segment, 0);
+  }
+
+  void enqueue(int item){
+    buffer[tail] = item;
+    tail = (tail + 1) % size;
+  }
+
+  int dequeue(){
+    int item = buffer[head];
+    head = (head + 1) % size;
+    return item;
   }
 };
 
@@ -142,5 +155,6 @@ int main(){
   //arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test memory mapped version
-  
+  ArrayQueue aq = MMQueue();
+  arrayqueue_test_multiplyer(aq, 40000, 8500);
 }
