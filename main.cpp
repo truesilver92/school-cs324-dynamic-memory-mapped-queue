@@ -147,12 +147,12 @@ void arrayqueue_test_multiplyer(ArrayQueue &aq, int number_to_do, int how_many_t
 int main(){
   // run and test array implementation
   // create array version
-  //ArrayQueue aq = ArrayQueue();
-  //arrayqueue_test_multiplyer(aq, 40000, 8500);
+  ArrayQueue aq = ArrayQueue();
+  arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test linked list version
-  //ArrayQueue aq = LinkedQueue(1);
-  //arrayqueue_test_multiplyer(aq, 40000, 8500);
+  ArrayQueue aq = LinkedQueue(1);
+  arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test memory mapped version
   ArrayQueue aq = MMQueue();
