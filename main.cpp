@@ -65,13 +65,13 @@ public:
   Node *tail;
 
   LinkedQueue(int item){
-    *head = Node();
+    head = new Node();
     tail = head;
     head->content = item;
   }
 
   void enqueue(int item){
-    *(tail->next) = Node();
+    tail->next = new Node();
     tail->content = item;
     tail = tail->next;
   }
@@ -101,7 +101,7 @@ void arrayqueue_test_multiplyer(ArrayQueue &aq, int number_to_do, int how_many_t
     total = total + (time2 - time);
   }
 
-  std::cout << "ArrayQueue test ";
+  std::cout << "test ";
   std::cout << number_to_do;
   std::cout << " enqueue then dequeue time average over ";
   std::cout << how_many_times;
@@ -113,10 +113,12 @@ void arrayqueue_test_multiplyer(ArrayQueue &aq, int number_to_do, int how_many_t
 int main(){
   // run and test array implementation
   // create array version
-  ArrayQueue aq = ArrayQueue();
-  arrayqueue_test_multiplyer(aq, 40000, 8500);
+  //ArrayQueue aq = ArrayQueue();
+  //arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test linked list version
+  ArrayQueue aq = LinkedQueue(1);
+  arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test memory mapped version
 }
