@@ -1,6 +1,11 @@
 
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
 
 /* Return the current time in seconds, using a double precision number.       */
 
@@ -83,6 +88,22 @@ public:
   }
 };
 
+class MMQueue : public ArrayQueue {
+public:
+
+  int segment;
+  int *buffer;
+  int size = 40960;
+  
+  MMQueue(){
+    segment = shm_open("segment", O_RDWR|O_CREAT, 0600);
+    ftruncate(segment, size);
+    buffer = (int *)mmap(0, 2 * size, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    mmap(buffer, size, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FIXED, segment, 0);
+    mmap(buffer + size, size, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FIXED, segment, 0);
+  }
+};
+
 void arrayqueue_test(ArrayQueue &aq, int number_to_do){
   for(int i = 0; i < number_to_do; i++){
     aq.enqueue(1);
@@ -117,8 +138,9 @@ int main(){
   //arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test linked list version
-  ArrayQueue aq = LinkedQueue(1);
-  arrayqueue_test_multiplyer(aq, 40000, 8500);
+  //ArrayQueue aq = LinkedQueue(1);
+  //arrayqueue_test_multiplyer(aq, 40000, 8500);
 
   // run and test memory mapped version
+  
 }
